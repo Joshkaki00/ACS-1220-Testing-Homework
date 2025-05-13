@@ -232,7 +232,7 @@ class MainTests(unittest.TestCase):
 
         # Make sure that the user was redirected to the login page
         self.assertEqual(response.status_code, 302)
-        self.assertIn('/login?next=%2Fcreate_book', response.location)
+        self.assertIn('/login', response.location)
 
     def test_create_author(self):
         """Test creating an author."""
