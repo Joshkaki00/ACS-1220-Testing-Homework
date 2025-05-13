@@ -112,25 +112,24 @@ class MainTests(unittest.TestCase):
 
     def test_book_detail_logged_out(self):
         """Test that the book appears on its detail page."""
-        # TODO: Use helper functions to create books, authors, user
+        # Set up
         create_books()
         create_user()
 
-        # TODO: Make a GET request to the URL /book/1, check to see that the
-        # status code is 200
+        # Make a GET request to the URL /book/1
         response = self.app.get('/book/1', follow_redirects=True)
         self.assertEqual(response.status_code, 200)
 
-
-        # TODO: Check that the response contains the book's title, publish date,
+        # Check that the response contains the book's title, publish date,
         # and author's name
         response_text = response.get_data(as_text=True)
         self.assertIn("<h1>To Kill a Mockingbird</h1>", response_text)
         self.assertIn("Harper Lee", response_text)
 
-        # TODO: Check that the response does NOT contain the 'Favorite' button
+        # Check that the response does NOT contain the 'Favorite' button
         # (it should only be shown to logged in users)
-        self.assertNotIn("Favorite This Book", response_text)
+        self.assertNotIn('Favorite This Book', response_text)
+        self.assertNotIn('/favorite/1', response_text)
 
     def test_book_detail_logged_in(self):
         """Test that the book appears on its detail page."""
@@ -260,7 +259,7 @@ class MainTests(unittest.TestCase):
         # Verify that the response shows the appropriate user info
         response_text = response.get_data(as_text=True)
         self.assertIn('me1', response_text)
-        self.assertIn('Favorite Books', response_text)
+        self.assertIn("me1's favorite books are:", response_text)
 
     def test_favorite_book(self):
         """Test that a book can be favorited."""

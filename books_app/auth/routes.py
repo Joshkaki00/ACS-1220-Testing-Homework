@@ -13,6 +13,10 @@ auth = Blueprint("auth", __name__)
 def signup():
     form = SignUpForm()
     if form.validate_on_submit():
+        existing_user = User.query.filter_by(username=form.username.data).first()
+        if existing_user:
+            flash('That username is taken. Please choose a different one.')
+            return render_template('signup.html', form=form)
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         user = User(
             username=form.username.data,
@@ -30,6 +34,12 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
+        if not user:
+            flash('No user with that username. Please try again.')
+            return render_template('login.html', form=form)
+        if not bcrypt.check_password_hash(user.password, form.password.data):
+            flash("Password doesn't match. Please try again.")
+            return render_template('login.html', form=form)
         login_user(user, remember=True)
         next_page = request.args.get('next')
         return redirect(next_page if next_page else url_for('main.homepage'))

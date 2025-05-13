@@ -89,6 +89,10 @@ def book_detail(book_id):
     
     # if form was submitted and contained no errors
     if form.validate_on_submit():
+        if not current_user.is_authenticated:
+            flash('You must be logged in to edit books.')
+            return redirect(url_for('auth.login'))
+            
         book.title = form.title.data
         book.publish_date = form.publish_date.data
         book.author = form.author.data

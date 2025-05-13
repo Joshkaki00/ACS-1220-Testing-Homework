@@ -80,7 +80,7 @@ class AuthTests(TestCase):
 
         # Check that the form is displayed again with an error message
         response_text = response.get_data(as_text=True)
-        self.assertIn('Username already taken', response_text)
+        self.assertIn('That username is taken', response_text)
 
     def test_login_correct_password(self):
         """Test that a user can log in with correct credentials."""
@@ -110,7 +110,7 @@ class AuthTests(TestCase):
 
         # Check that the login form is displayed again with an error message
         response_text = response.get_data(as_text=True)
-        self.assertIn('No user found with that username', response_text)
+        self.assertIn('No user with that username', response_text)
 
     def test_login_incorrect_password(self):
         """Test that login fails with incorrect password."""
@@ -126,7 +126,7 @@ class AuthTests(TestCase):
 
         # Check that the login form is displayed again with an error message
         response_text = response.get_data(as_text=True)
-        self.assertIn('Password incorrect', response_text)
+        self.assertIn("Password doesn't match", response_text)
 
     def test_logout(self):
         """Test that a user can log out."""
