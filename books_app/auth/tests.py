@@ -132,7 +132,8 @@ class AuthTests(TestCase):
 
         # Check that the login form is displayed again with an error message
         response_text = response.get_data(as_text=True)
-        self.assertIn("Password doesn't match. Please try again.", response_text)
+        # Look for the error message format as it appears in the HTML
+        self.assertIn("Password doesn&#39;t match. Please try again.", response_text)
 
     def test_logout(self):
         """Test that a user can log out."""

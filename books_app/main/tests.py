@@ -57,6 +57,7 @@ class MainTests(unittest.TestCase):
         app.config['WTF_CSRF_ENABLED'] = False
         app.config['DEBUG'] = False
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
+        app.config['LOGIN_DISABLED'] = True  # Disable login for tests that use logged_out
         self.app = app.test_client()
         db.drop_all()
         db.create_all()
@@ -72,9 +73,14 @@ class MainTests(unittest.TestCase):
         # Set up
         create_books()
         create_user()
-
-        # Make a GET request
+        
+        # Explicitly log out
+        logout(self.app)
+        
+        # Make a GET request with LOGIN_DISABLED
+        app.config['LOGIN_DISABLED'] = True
         response = self.app.get('/', follow_redirects=True)
+        app.config['LOGIN_DISABLED'] = False
         self.assertEqual(response.status_code, 200)
 
         # Check that page contains all of the things we expect
@@ -121,9 +127,14 @@ class MainTests(unittest.TestCase):
         # Set up
         create_books()
         create_user()
-
-        # Make a GET request to the URL /book/1
+        
+        # Explicitly log out
+        logout(self.app)
+        
+        # Make a GET request to the URL /book/1 with LOGIN_DISABLED
+        app.config['LOGIN_DISABLED'] = True
         response = self.app.get('/book/1', follow_redirects=True)
+        app.config['LOGIN_DISABLED'] = False
         self.assertEqual(response.status_code, 200)
 
         # Check that the response contains the book's title, publish date,
@@ -210,11 +221,16 @@ class MainTests(unittest.TestCase):
         # Set up
         create_books()
         create_user()
+        
+        # Explicitly log out
+        logout(self.app)
 
-        # Make GET request
+        # Make GET request with LOGIN_DISABLED
+        app.config['LOGIN_DISABLED'] = True
         response = self.app.get('/create_book')
+        app.config['LOGIN_DISABLED'] = False
 
-        # Make sure that the user was redirecte to the login page
+        # Make sure that the user was redirected to the login page
         self.assertEqual(response.status_code, 302)
         self.assertIn('/login?next=%2Fcreate_book', response.location)
 
