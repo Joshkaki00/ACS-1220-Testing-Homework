@@ -85,6 +85,10 @@ def create_genre():
 @main.route('/book/<book_id>', methods=['GET', 'POST'])
 def book_detail(book_id):
     book = Book.query.get(book_id)
+    if not book:
+        flash('Book not found.')
+        return redirect(url_for('main.homepage'))
+        
     form = BookForm(obj=book)
     
     # if form was submitted and contained no errors

@@ -51,6 +51,9 @@ class AuthTests(TestCase):
         self.app = app.test_client()
         db.drop_all()
         db.create_all()
+        # Ensure user is logged out before each test
+        with self.app.session_transaction() as session:
+            session.clear()
 
     def test_signup(self):
         """Test that a user can sign up."""
