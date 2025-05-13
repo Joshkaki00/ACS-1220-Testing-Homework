@@ -54,6 +54,9 @@ class AuthTests(TestCase):
         # Ensure user is logged out before each test
         with self.app.session_transaction() as session:
             session.clear()
+            session.pop('_user_id', None)
+            session.pop('_fresh', None)
+            session.pop('_id', None)
 
     def test_signup(self):
         """Test that a user can sign up."""
@@ -129,7 +132,7 @@ class AuthTests(TestCase):
 
         # Check that the login form is displayed again with an error message
         response_text = response.get_data(as_text=True)
-        self.assertIn("Password doesn't match", response_text)
+        self.assertIn("Password doesn't match. Please try again.", response_text)
 
     def test_logout(self):
         """Test that a user can log out."""

@@ -63,6 +63,9 @@ class MainTests(unittest.TestCase):
         # Ensure user is logged out before each test
         with self.app.session_transaction() as session:
             session.clear()
+            session.pop('_user_id', None)
+            session.pop('_fresh', None)
+            session.pop('_id', None)
  
     def test_homepage_logged_out(self):
         """Test that the books show up on the homepage."""

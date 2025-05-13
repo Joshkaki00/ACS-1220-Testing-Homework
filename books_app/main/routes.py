@@ -26,6 +26,10 @@ def homepage():
 @main.route('/create_book', methods=['GET', 'POST'])
 @login_required
 def create_book():
+    if not current_user.is_authenticated:
+        flash('You must be logged in to create books.')
+        return redirect(url_for('auth.login'))
+        
     form = BookForm()
 
     # if form was submitted and contained no errors
